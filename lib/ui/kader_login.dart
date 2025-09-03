@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:posyandu_mawar/ui/biodata_anak.dart';
 import 'package:posyandu_mawar/ui/kader_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginKaderPage extends StatefulWidget {
   const LoginKaderPage({super.key});
@@ -11,6 +11,44 @@ class LoginKaderPage extends StatefulWidget {
 }
 
 class _LoginKaderPageState extends State<LoginKaderPage> {
+  final _skkaderController = TextEditingController();
+  final _namakaderController = TextEditingController();
+   final _passwordkaderController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
+Future<void> _login() async {
+  final prefs = await SharedPreferences.getInstance();
+
+  final savedskkader = prefs.getString("skkader");    
+  final savednamakader = prefs.getString("Namakader");
+   final savedPasswordkader = prefs.getString("passwordkader");
+
+  if (_formKey.currentState!.validate()) {
+    if (_skkaderController.text == savedskkader&&
+        _namakaderController.text == savednamakader &&
+        _passwordkaderController.text == savedPasswordkader) {
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Login berhasil ✅")),
+      );
+
+
+      await prefs.setBool("isLoggedInkader", true);
+
+  
+   
+
+       Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const KaderPage()),
+        );
+
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Nama dan kata sandi yang dimasukan tidak sesuai❌")),
+      );
+    }
+  }
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,6 +62,7 @@ class _LoginKaderPageState extends State<LoginKaderPage> {
       child: Padding(
         padding: const EdgeInsets.all(2),
         child: Form(
+          key: _formKey,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -47,6 +86,9 @@ class _LoginKaderPageState extends State<LoginKaderPage> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: TextFormField(
+                  controller: _skkaderController,
+                   validator: (v) =>
+                            v == null || v.isEmpty ? "sk wajib diisi" : null,
                   style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     labelText: 'Nomor identitas',
@@ -66,9 +108,13 @@ class _LoginKaderPageState extends State<LoginKaderPage> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: TextFormField(
+                  controller: _namakaderController,
+                   validator: (v) =>
+                            v == null || v.isEmpty ? "Username wajib diisi" : null,
                   style: const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
                   decoration: InputDecoration(
                     labelText: 'Username',
+                    
                     labelStyle: const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
                     hintText: 'Masukkan Nama Lengkap',
                     hintStyle: TextStyle(color: const Color.fromARGB(255, 0, 0, 0).withOpacity(0.3)),
@@ -88,6 +134,9 @@ class _LoginKaderPageState extends State<LoginKaderPage> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: TextFormField(
+                   validator: (v) =>
+                            v == null || v.isEmpty ? "Sandi wajib diisi" : null,
+                  controller: _passwordkaderController,
                   style: const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
                   decoration: InputDecoration(
                     labelText: 'Kata Sandi',
@@ -108,11 +157,7 @@ class _LoginKaderPageState extends State<LoginKaderPage> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 60),
                 child: ElevatedButton(
-                   onPressed: ()async { Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (context) => const KaderPage(),
-                        ),
-                      );},
+                   onPressed: _login,
   style: ElevatedButton.styleFrom(
     backgroundColor: Colors.white,           
     foregroundColor: const Color(0xFFBC3763), 

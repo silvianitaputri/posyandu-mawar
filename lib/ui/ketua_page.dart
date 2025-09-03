@@ -1,32 +1,50 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
-import 'package:intl/intl.dart';
-import 'package:posyandu_mawar/ui/antrian.dart';
-import 'package:posyandu_mawar/ui/shared_preference.dart';
+import 'package:posyandu_mawar/ui/ketua_lanjutan.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
-
-class PosyanduPage extends StatefulWidget {
-  const PosyanduPage({super.key});
+class KetuaPage extends StatefulWidget {
+  const KetuaPage({super.key});
 
   @override
-  State<PosyanduPage> createState() => _PosyanduPageState();
+  State<KetuaPage> createState() => _KetuaPageState();
 }
 
+    final List<Map<String, dynamic>> data = [
+      {
+        "title": "Today – 23 April 2024",
+        "jumlah": 4,
+        "isToday": true,
+      },
+      {
+        "title": "Bulan Lalu – 23 Maret 2024",
+        "jumlah": 2,
+        "isToday": false,
+      },
+      {
+        "title": "2 Bulan Lalu – 23 Februari 2024",
+        "jumlah": 3,
+        "isToday": false,
+      },
+      {
+        "title": "3 Bulan Lalu – 23 Januari 2024",
+        "jumlah": 3,
+        "isToday": false,
+      },
+      {
+        "title": "23 Desember 2023",
+        "jumlah": 2,
+        "isToday": false,
+      },
+    ];
+class _KetuaPageState extends State<KetuaPage> {
+  String namalengkap = "";
+  String emailposyandu = "";
+  String jabatanketua = "";
+ 
 
 
-class _PosyanduPageState extends State<PosyanduPage> {
-  String namaIbu = "";
-  String nikIbu = "";
-  String noHpIbu = "";
-
-  // Data Anak
-  String namaAnak = "";
-  String tanggalLahirAnak = "";
-  String jenisKelaminAnak = "";
-  String usiaAnak = "-";
 
   @override
   void initState() {
@@ -39,40 +57,13 @@ class _PosyanduPageState extends State<PosyanduPage> {
 
     setState(() {
   
-      namaIbu = prefs.getString("namaIbu") ?? "Belum diisi";
-      nikIbu = prefs.getString("nikIbu") ?? "-";
-      noHpIbu = prefs.getString("teleponIbu") ?? "-";
+      namalengkap = prefs.getString("Namalengkap") ?? "Belum diisi";
+      emailposyandu = prefs.getString("EmailPosyandu") ?? "-";
+      jabatanketua = prefs.getString("Jabatanketua") ?? "-";
 
-      namaAnak = prefs.getString("namaAnak") ?? "Belum diisi";
-      tanggalLahirAnak = prefs.getString("tanggalLahirAnak") ?? "-";
+
       
-String tanggalLahirAnakStr = prefs.getString("tanggalLahirAnak") ?? "-";
-if (tanggalLahirAnakStr != "-") {
-
-  DateTime tanggalLahir = DateFormat('yyyy-MM-dd').parse(tanggalLahirAnakStr);
-  DateTime today = DateTime.now();
-
-  int years = today.year - tanggalLahir.year;
-  int months = today.month - tanggalLahir.month;
-  int days = today.day - tanggalLahir.day;
-
-  if (days < 0) {
-    months -= 1;
-    days += DateTime(tanggalLahir.year, tanggalLahir.month + 1, 0).day;
-  }
-  if (months < 0) {
-    years -= 1;
-    months += 12;
-  }
-
-  usiaAnak = "$years Tahun ($years Tahun $months Bulan)";
-}
-      jenisKelaminAnak = prefs.getString("jenisKelaminAnak") == "0"
-          ? "Perempuan"
-          : prefs.getString("jenisKelaminAnak") == "1"
-              ? "Laki-Laki"
-              : "-";
-    });}
+   } );}
   int currentPageIndex = 0;
   showMenu(BuildContext context) {
     showModalBottomSheet(
@@ -219,192 +210,193 @@ if (tanggalLahirAnakStr != "-") {
     return MaterialApp(
       theme: ThemeData(
         colorScheme:
-            ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 109, 109, 96)),
+            ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 38, 70, 105)),
         useMaterial3: true,
       ),
       home: Scaffold(
-        bottomNavigationBar: NavigationBar(
-          onDestinationSelected: (int index) {
-            setState(() {
-              currentPageIndex = index;
-            });
-          },
-          indicatorColor: const Color.fromARGB(255, 142, 191, 243),
-          selectedIndex: currentPageIndex,
-          destinations: const <Widget>[
-            NavigationDestination(
-              selectedIcon: Icon(Icons.home),
-              icon: Icon(Icons.home),
-              label: 'Home',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.filter_frames_outlined),
-              label: 'Riwayat',
-            ),
-            NavigationDestination(
-       
-              icon: Icon(Icons.person_2_outlined),
-              label: 'Profil',
-            ),
-          ],
+        bottomNavigationBar: Theme(data: Theme.of(context).copyWith( navigationBarTheme: NavigationBarThemeData(
+      labelTextStyle: MaterialStateProperty.resolveWith<TextStyle>(
+        (Set<MaterialState> states) {
+          if (states.contains(MaterialState.selected)) {
+            return const TextStyle(
+              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14);
+          }
+          return const TextStyle(
+            color: Colors.white70, fontWeight: FontWeight.normal, fontSize: 14);
+        },
+      ),)),
+          child: NavigationBar(
+            
+            backgroundColor: const Color.fromARGB(255, 188, 55, 99),
+            onDestinationSelected: (int index) {
+              setState(() {
+                currentPageIndex = index;
+              });
+            },
+            indicatorColor: const Color.fromARGB(255, 142, 191, 243),
+            selectedIndex: currentPageIndex,
+            
+            destinations: const <Widget>[
+              NavigationDestination(
+          
+                icon: Icon(Icons.home, color: Colors.white),
+                label: 'Home',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.my_library_books_rounded,color: Colors.white),
+                label: 'Laporan',
+              ),
+              NavigationDestination(
+                 
+                icon: Icon(Icons.person_2_outlined,color: Colors.white),
+          
+                label: 'Profil',
+              ),
+              
+              
+            ],
+            
+          ),
         ),
         body: <Widget>[
           /// Home page
-          Scaffold(
-            // floatingActionButton: FloatingActionButton(
-            //   onPressed: () async {
-            //     // Navigator.of(context).push(
-            //     //   MaterialPageRoute(
-            //     //       builder: (context) => const HistoriMutasi()),
-            //     // );
-            //     // Add your onPressed code here!
-            //   },
-            //   // label: const Text('babi'),
-            //   backgroundColor: Color.fromARGB(255, 171, 7, 108),
-            //   foregroundColor: Colors.white,
-            //   // child: const Icon(Icons.add),
-            // ),
-           appBar: AppBar(
-  toolbarHeight: 80,
-  title: const Text.rich(
-    TextSpan(
-      children: [
-        TextSpan(
-          text: 'HELLO, Nama Orang !\n',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-            height: 1.9,
-          ),
-        ),
-        TextSpan(
-          text: 'Senin 12-12-2023',
-          style: TextStyle(
-            fontWeight: FontWeight.normal,
-            fontSize: 16,
-          ),
-        ),
-      ],
-    ),
-  ),
-  backgroundColor: const Color.fromARGB(255, 142, 191, 243),
-  actions: [
-    PopupMenuButton<String>(
-      icon: const Icon(Icons.more_vert), // ikon tiga titik vertikal
-      onSelected: (value) {
-        if (value == 'logout') {
-          // kode logout di sini
-          print('Logout clicked');
-        } else if (value == 'Help') {
-          // kode buka Help di sini
-          print('Help clicked');
-        }
-      },
-      itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-        const PopupMenuItem<String>(
-          value: 'logout',
-          child: Text('Logout'),
-        ),
-        const PopupMenuItem<String>(
-          value: 'Help',
-          child: Text('Help'),
-        ),
-      ],
-    ),
-  ],
-),
-
-body: Column(
-  children: [
-    Container(
-      width: double.infinity,
-      height: 200, // tinggi kotak grafik
-      margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: Colors.blue, width: 2),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: LineChart(
-        LineChartData(
-          lineBarsData: [
-            LineChartBarData(
-              spots: const [
-                FlSpot(0, 1),
-                FlSpot(1, 3),
-                FlSpot(2, 2),
-                FlSpot(3, 5),
-                FlSpot(4, 3),
-                FlSpot(5, 4),
-                FlSpot(6, 7),
-              ],
-              isCurved: true,
-              color: Colors.blue,
-              barWidth: 3,
-              dotData: const FlDotData(show: true),
-            ),
-          ],
-          titlesData: const FlTitlesData(
-            leftTitles: AxisTitles(
-              sideTitles: SideTitles(showTitles: true),
-            ),
-            bottomTitles: AxisTitles(
-              sideTitles: SideTitles(showTitles: true),
-            ),
-          ),
-          gridData: const FlGridData(show: true),
-          borderData: FlBorderData(show: true),
-        ),
-      ),
-    ),
-
-    Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      width: double.infinity,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.blue,
-          foregroundColor: Colors.white,
-          minimumSize: const Size.fromHeight(50),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5),
-          ),
-        ),
-       onPressed: ()async { Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (context) => const Antrian(),
+      Scaffold(
+      backgroundColor: const Color(0xFF2196F3), // biru background luar
+      body: Column(
+        children: [
+          // Header biru atas
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 30),
+            color: const Color(0xFF2196F3),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // teks kiri
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text(
+                        "Hallo, Kader!",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
                         ),
-                      );},
-        child: const Text(
-          'Ambil Antrian',
-          style: TextStyle(fontSize: 18),
-        ),
-      ),
-    ),
-
-    const SizedBox(height: 16), // jarak ke berita
-
-    SizedBox(
-      height: 250, // tinggi kontainer berita
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Row(
-          children: [
-            beritaCard("Berita 1", "Ini adalah berita pertama."),
-            beritaCard("Berita 2", "Berita kedua dengan isi menarik."),
-            beritaCard("Berita 3", "Update terbaru di berita ketiga."),
-            beritaCard("Berita 4", "Berita keempat sangat penting."),
-            beritaCard("Berita 5", "Berita kelima penuh informasi."),
-          ],
-        ),
-      ),
-    ),
-  ],
-),
-
+                      ),
+                      SizedBox(height: 6),
+                      Text(
+                        "Ayo cek segera cek pengunjung",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  ),
+                ),
+                // bulat putih kanan
+                const CircleAvatar(
+                  radius: 25,
+                  backgroundColor: Colors.white,
+                ),
+              ],
+            ),
           ),
+
+          // Container isi
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(12),
+              decoration: const BoxDecoration(
+                color: Color(0xFF0D47A1),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30),
+                  topRight: Radius.circular(30),
+                ),
+              ),
+              child: ListView.builder(
+                itemCount: data.length,
+                itemBuilder: (context, index) {
+                  final item = data[index];
+                  return Container(
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 6, horizontal: 4),
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 3,
+                          offset: const Offset(1, 2),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.calendar_today,
+                            size: 20, color: Colors.grey),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                item["title"],
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                "${item['jumlah']} Balita Berisiko",
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: item["isToday"]    ? () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const KetuaLanjutan(), // ganti dengan page yg mau dituju
+            ),
+          );
+        }
+      : null,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: item["isToday"]
+                                ? Colors.pink
+                                : Colors.grey.shade200,
+                            foregroundColor: item["isToday"]
+                                ? Colors.white
+                                : Colors.black54,
+                            elevation: 0,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: const Text("Lihat"),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+          )
+        ],
+      ),
+    ),
 
           // / Notifications page
            Scaffold(
@@ -426,7 +418,7 @@ body: Column(
   title: const Center(
   child: Text.rich(
     TextSpan(
-      text: 'Riwayat Kesehatan Balita',
+      text: 'Laporan Data Balita',
       style: TextStyle(
         fontWeight: FontWeight.bold,
         fontSize: 30,
@@ -441,89 +433,86 @@ body: Column(
 
 ),
 
+backgroundColor: const Color.fromARGB(255, 142, 191, 243),
 body: Padding(
   padding: const EdgeInsets.all(16),
   child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.center,
     children: [
-     const Center(
-  child: Text(
-    'Hari Ini',
-    style: TextStyle(fontSize: 14),
-  ),
-),
-
-      const Text(
-        'Tinggi Badan: 150 cm',
-        style: TextStyle(fontSize: 18,),
-      ),
-      const SizedBox(height: 8),
-      const Text(
-        'Berat Badan: 45 kg',
-        style: TextStyle(fontSize: 18,),
-      ),
-      const SizedBox(height: 8),
-      const Text(
-        'Imunisasi: BCG/Polio',
-        style: TextStyle(fontSize: 18,),
-      ),
-
-      const SizedBox(height: 24),
- Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.green, // Ganti ke Colors.red untuk stunting/gemuk
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: const Text(
-          'Status: Normal',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 20,
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-      // Kotak status hasil
-     Container(
+    
+Container(
   width: double.infinity,
-  height: 200, // tinggi kotak
+  height: 250,
   margin: const EdgeInsets.all(16),
   padding: const EdgeInsets.all(12),
   decoration: BoxDecoration(
-    color: Colors.white,
-    border: Border.all(color: const Color.fromARGB(255, 87, 157, 92), width: 2),
-    borderRadius: BorderRadius.circular(12),
+    color: const Color.fromARGB(255, 245, 232, 211),
+    border: Border.all(color: const Color.fromARGB(255, 0, 0, 0), width: 3),
+    borderRadius: BorderRadius.circular(10),
   ),
-  child: const Center(
-    child: Column(
-      mainAxisSize: MainAxisSize.min, 
-      children: [
-        Text(
-          'Teridentifikasi:',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Color.fromARGB(255, 87, 157, 92),
-          ),
-          textAlign: TextAlign.center,
+  child: Column(
+    mainAxisSize: MainAxisSize.min,
+    crossAxisAlignment: CrossAxisAlignment.start, // konten rata kiri
+    children: [
+      const Text(
+        'Hari Ini',
+        style: TextStyle(
+          fontSize: 18,
+          color: Color.fromARGB(255, 0, 0, 0),
         ),
-        SizedBox(height: 8), // jarak antar teks
-        Text(
-          'Normal',
-          style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-            color: Color.fromARGB(255, 87, 157, 92),
-          ),
-          textAlign: TextAlign.center,
+        textAlign: TextAlign.start,
+      ),
+      const SizedBox(height: 8),
+      const Text(
+        'Laporan Pemeriksaan Balita',
+        style: TextStyle(
+          fontSize: 22,
+          fontWeight: FontWeight.bold,
+          color: Color.fromARGB(255, 0, 0, 0),
         ),
-      ],
-    ),
+        textAlign: TextAlign.start,
+      ),
+      
+      const SizedBox(height: 8),
+      const Text(
+        'Meliput data antropomentri dan hasil clustering pada balita',
+        style: TextStyle(
+          fontSize: 16,
+          color: Color.fromARGB(255, 0, 0, 0),
+        ),
+        textAlign: TextAlign.start,
+      ),
+      const SizedBox(height: 34),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.start, // tombol mulai dari kiri
+        children: [
+       
+ 
+          ElevatedButton(
+            onPressed: () {
+              print('Tombol 2 ditekan');
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color.fromARGB(255, 188, 55, 99),
+              foregroundColor: const Color.fromARGB(255, 255, 255, 255),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 15),
+            ),
+            child: const Text(
+              'Cetak xls.',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
+      ),
+    ],
   ),
-),
+)
+,
+const SizedBox(height: 32),
+
 
     ],
   ),
@@ -578,8 +567,10 @@ Icon(
 ),
 Center(
   child: Text(
-    'Profil Ibu',
-    style: TextStyle(fontSize: 14),
+    '$namalengkap',
+    style: TextStyle (fontSize: 14,  fontWeight: FontWeight.bold,),
+    
+    
   ),),
 const SizedBox(height: 12),
 Container(
@@ -595,29 +586,22 @@ Container(
     crossAxisAlignment: CrossAxisAlignment.start,
     
     children: [
-
+   
+ 
 
       Row(
         children: [
-          const Text('Nama Ibu            : ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+          const Text('jabatan                : ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
           const SizedBox(width: 8),
-          Text('$namaIbu', style: const TextStyle(fontSize: 16)),
+          Text('$jabatanketua', style: const TextStyle(fontSize: 16)),
         ],
       ),
       const SizedBox(height: 8),
       Row(
         children: [
-          const Text('NIK                      : ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+          const Text('Email    : ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
           const SizedBox(width: 8),
-          Text('$nikIbu', style: const TextStyle(fontSize: 16)),
-        ],
-      ),
-      const SizedBox(height: 8),
-       Row(
-        children: [
-          Text('Nomor HP           : ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-          SizedBox(width: 8),
-          Text('$noHpIbu', style: TextStyle(fontSize: 16)),
+          Text('$emailposyandu', style: const TextStyle(fontSize: 16)),
         ],
       ),
     ],
@@ -625,57 +609,40 @@ Container(
 ),
 
 const SizedBox(height: 32),
-
-// Profil Anak
- Icon(
-  CupertinoIcons.person_circle_fill,
-  size: 100, // kira-kira setara CircleAvatar radius 50 (diameter 100)
-  color: const Color(0xFFBC3763),
-),
-Center(
-  child: Text(
-    'Profil Anak',
-    style: TextStyle(fontSize: 14),
-  ),),
-const SizedBox(height: 12),
-Container(
+ Container(
   width: double.infinity,
-  padding: const EdgeInsets.all(16),
-  decoration: BoxDecoration(
-    color: Colors.white,
-    border: Border.all(color: Colors.blueGrey, width: 2),
-    borderRadius: BorderRadius.circular(12),
-  ),
+  alignment: Alignment.topLeft, // pastikan konten rata kiri
   child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.start, // child di kiri
     children: [
+      ElevatedButton(
+        onPressed: () {
+          print('Tombol 1 ditekan');
+        },
+        style: ElevatedButton.styleFrom(
        
-      Row(
-        children: [
-          const Text('Nama                : ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-          const SizedBox(width: 8),
-          Text('$namaAnak', style: const TextStyle(fontSize: 16)),
-        ],
+          foregroundColor: const Color.fromARGB(255, 18, 3, 3),
+          shape: RoundedRectangleBorder(
+            
+            borderRadius: BorderRadius.circular(10),  side: const BorderSide(
+        color: Colors.black, 
+        width: 1,           
       ),
-      const SizedBox(height: 8),
-      Row(
-        children: [
-          const Text('Usia                 : ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-          const SizedBox(width: 8),
-          Text('$usiaAnak', style: const TextStyle(fontSize: 16)),
-        ],
-      ),
-      const SizedBox(height: 8),
-      const Row(
-        children: [
-          Text('Status               : ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-          SizedBox(width: 8),
-          Text('-', style: TextStyle(fontSize: 16)),
-        ],
+            
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 130, vertical: 15),
+        ),
+        child: const Text(
+          'Keluar Akun ',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
     ],
   ),
-),
+)
+
+// Profil Anak
+
 
     ],
   ),
@@ -723,4 +690,3 @@ Widget beritaCard(String title, String description) {
     ),
   );
 }
-

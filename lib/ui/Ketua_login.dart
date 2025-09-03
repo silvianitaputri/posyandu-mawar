@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:posyandu_mawar/ui/biodata_anak.dart';
+import 'package:posyandu_mawar/ui/ketua_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginKetuaPage extends StatefulWidget {
   const LoginKetuaPage({super.key});
@@ -10,6 +11,42 @@ class LoginKetuaPage extends StatefulWidget {
 }
 
 class _LoginKetuaPageState extends State<LoginKetuaPage> {
+  final _emailposyanduController = TextEditingController();
+  final _katasandiketuaController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
+
+
+Future<void> _login() async {
+  final prefs = await SharedPreferences.getInstance();
+
+  final savedemailposyandu = prefs.getString("EmailPosyandu");    
+   final savedkatsandiketua = prefs.getString("passwordketua");
+
+  if (_formKey.currentState!.validate()) {
+    if (_emailposyanduController.text == savedemailposyandu &&
+        _katasandiketuaController.text == savedkatsandiketua)  {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Login berhasil ✅")),
+      );
+
+
+      await prefs.setBool("isLoggedInkader", true);
+
+  
+   
+
+       Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const KetuaPage()),
+        );
+
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Nama dan kata sandi yang dimasukan tidak sesuai❌")),
+      );
+    }
+  }
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,6 +60,7 @@ class _LoginKetuaPageState extends State<LoginKetuaPage> {
       child: Padding(
         padding: const EdgeInsets.all(2),
         child: Form(
+          key: _formKey,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -46,6 +84,9 @@ class _LoginKetuaPageState extends State<LoginKetuaPage> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: TextFormField(
+                  controller:_emailposyanduController ,
+                   validator: (v) =>
+                            v == null || v.isEmpty ? "email wajib diisi" : null,
                   style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     labelText: 'Masukan Email',
@@ -69,8 +110,12 @@ class _LoginKetuaPageState extends State<LoginKetuaPage> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: TextFormField(
+                  controller: _katasandiketuaController,
+                   validator: (v) =>
+                            v == null || v.isEmpty ? "Kata sandi wajib diisi" : null,
                   style: const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
                   decoration: InputDecoration(
+                    
                     labelText: 'Kata Sandi',
                     labelStyle: const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
                     hintText: 'Masukkan Kata Sandi',
@@ -89,11 +134,7 @@ class _LoginKetuaPageState extends State<LoginKetuaPage> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 60),
                 child: ElevatedButton(
-                   onPressed: ()async { Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (context) => const BiodataAnak(),
-                        ),
-                      );},
+               onPressed: _login,
   style: ElevatedButton.styleFrom(
     backgroundColor: Colors.white,           
     foregroundColor: const Color(0xFFBC3763), 

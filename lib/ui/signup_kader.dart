@@ -1,27 +1,29 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:posyandu_mawar/ui/kader_login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:posyandu_mawar/ui/login.dart';
 
-class SignUp extends StatefulWidget {
-  const SignUp({super.key});
+class SignUpKader extends StatefulWidget {
+  const SignUpKader({super.key});
 
   @override
-  State<SignUp> createState() => _SignUpState();
+  State<SignUpKader> createState() => _SignUpKaderState();
 }
 
-class _SignUpState extends State<SignUp> {
+class _SignUpKaderState extends State<SignUpKader> {
   // 🔹 Controllers
-  final _nikController = TextEditingController();
-  final _namaController = TextEditingController();
-  final _teleponController = TextEditingController();
+  final _namalengkapController = TextEditingController();
+  final _alamatemailController = TextEditingController();
+  final _nomorSkkaderController = TextEditingController();
+  final _jabatankaderController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
 
   // 🔹 Simpan ke SharedPreferences
-  Future<void> _saveSignUp() async {
+  Future<void> _saveSignUpKader() async {
     if (_formKey.currentState!.validate()) {
       if (_passwordController.text != _confirmPasswordController.text) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -31,11 +33,12 @@ class _SignUpState extends State<SignUp> {
       }
 
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString("nikIbu", _nikController.text);
-      await prefs.setString("namaIbu", _namaController.text);
-      await prefs.setString("teleponIbu", _teleponController.text);
-      await prefs.setString("passwordIbu", _passwordController.text);
-        await prefs.setBool("isSignedUp", true);
+      await prefs.setString("Namakader", _namalengkapController.text);
+      await prefs.setString("emailkader", _alamatemailController.text);
+      await prefs.setString("skkader", _nomorSkkaderController.text);
+       await prefs.setString("Jabatankader", _jabatankaderController.text);
+      await prefs.setString("passwordkader", _passwordController.text);
+        await prefs.setBool("isSignedUpkader", true);
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Pendaftaran berhasil disimpan")),
@@ -43,7 +46,7 @@ class _SignUpState extends State<SignUp> {
 
       // pindah ke login
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const LoginPage()),
+        MaterialPageRoute(builder: (context) => const LoginKaderPage()),
       );
     }
   }
@@ -86,11 +89,11 @@ class _SignUpState extends State<SignUp> {
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: TextFormField(
                         
-                        controller: _nikController,
+                        controller: _namalengkapController,
                           style: const TextStyle(color: const Color.fromARGB(255, 15, 14, 14)),
-                        keyboardType: TextInputType.number,
+                       
                         validator: (v) =>
-                            v == null || v.isEmpty ? "NIK wajib diisi" : null,
+                            v == null || v.isEmpty ? "Nama wajib diisi" : null,
                         decoration: const InputDecoration(
                             enabledBorder: const UnderlineInputBorder(
                       borderSide: BorderSide(color:  Color.fromARGB(255, 15, 14, 14)),
@@ -98,8 +101,8 @@ class _SignUpState extends State<SignUp> {
                     focusedBorder: const UnderlineInputBorder(
                       borderSide: BorderSide(color: Color.fromARGB(255, 15, 14, 14), width: 2),
                     ),
-                          labelText: 'Masukan NIK',
-                          hintText: 'Masukkan Nomor Induk Kependudukan',
+                          labelText: 'Masukan Nama Lengkap',
+                          hintText: 'Masukkan Nama Sesuai KTP',
                     hintStyle: TextStyle(color: const Color.fromARGB(255, 15, 14, 14)),
                            labelStyle: const TextStyle(color:Color.fromARGB(255, 15, 14, 14)),
                           icon: Icon(CupertinoIcons.person,
@@ -113,10 +116,10 @@ class _SignUpState extends State<SignUp> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: TextFormField(
-                        controller: _namaController,
+                        controller: _alamatemailController,
                           style: const TextStyle(color: const Color.fromARGB(255, 15, 14, 14)),
                         validator: (v) =>
-                            v == null || v.isEmpty ? "Nama wajib diisi" : null,
+                            v == null || v.isEmpty ? "Email wajib isi" : null,
                         decoration: const InputDecoration(
                             enabledBorder: const UnderlineInputBorder(
                       borderSide: BorderSide(color:  Color.fromARGB(255, 15, 14, 14)),
@@ -124,26 +127,51 @@ class _SignUpState extends State<SignUp> {
                     focusedBorder: const UnderlineInputBorder(
                       borderSide: BorderSide(color: Color.fromARGB(255, 15, 14, 14), width: 2),
                     ),
-                    hintText: 'Nama Lengkap Sesuai KTP',
+                    hintText: 'email cth: tiaraandini@gmail.com',
                     hintStyle: TextStyle(color: const Color.fromARGB(255, 15, 14, 14)),
                      labelStyle: const TextStyle(color:Color.fromARGB(255, 15, 14, 14)),
-                          labelText: 'Masukan Nama',
+                          labelText: 'Masukan Email Aktif',
                           icon: Icon(CupertinoIcons.person_add,
                               color: Color.fromARGB(255, 15, 14, 14)),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 30),
+                             const SizedBox(height: 16),
+                    // Jabatan
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: TextFormField(
+                        controller: _jabatankaderController,
+                          style: const TextStyle(color: const Color.fromARGB(255, 15, 14, 14)),
+                        validator: (v) =>
+                            v == null || v.isEmpty ? "Jabatan Wajib Isi" : null,
+                        decoration: const InputDecoration(
+                            enabledBorder: const UnderlineInputBorder(
+                      borderSide: BorderSide(color:  Color.fromARGB(255, 15, 14, 14)),
+                    ),
+                    focusedBorder: const UnderlineInputBorder(
+                      borderSide: BorderSide(color: Color.fromARGB(255, 15, 14, 14), width: 2),
+                    ),
+                    hintText: 'cth : Anggota',
+                    hintStyle: TextStyle(color: const Color.fromARGB(255, 15, 14, 14)),
+                     labelStyle: const TextStyle(color:Color.fromARGB(255, 15, 14, 14)),
+                          labelText: 'Masukan Jabatan Diposyandu',
+                          icon: Icon(CupertinoIcons.person_add,
+                              color: Color.fromARGB(255, 15, 14, 14)),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
 
                     // 🔹 Nomor Telepon
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: TextFormField(
-                        controller: _teleponController,
-                        keyboardType: TextInputType.phone,
+                        controller: _nomorSkkaderController,
+                      
                           style: const TextStyle(color: const Color.fromARGB(255, 15, 14, 14)),
                         validator: (v) => v == null || v.isEmpty
-                            ? "Nomor telepon wajib diisi"
+                            ? "No SK Kader wajib isi"
                             : null,
                         decoration: const InputDecoration(
                             enabledBorder: const UnderlineInputBorder(
@@ -152,8 +180,8 @@ class _SignUpState extends State<SignUp> {
                     focusedBorder: const UnderlineInputBorder(
                       borderSide: BorderSide(color: Color.fromARGB(255, 15, 14, 14), width: 2),
                     ),
-                          labelText: 'Masukan Nomor Telepon',
-                           hintText: 'Masukkan Nomor telepon yang Aktif',
+                          labelText: 'Masukan No. SK',
+                           hintText: 'Masukkan Nomor SK Kader',
                     hintStyle: TextStyle(color: const Color.fromARGB(255, 15, 14, 14)),
                            labelStyle: const TextStyle(color:Color.fromARGB(255, 15, 14, 14)),
                           icon: Icon(Icons.call,
@@ -161,7 +189,7 @@ class _SignUpState extends State<SignUp> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 16),
 
                     // 🔹 Password
                     Padding(
@@ -189,7 +217,7 @@ class _SignUpState extends State<SignUp> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 16),
 
                     // 🔹 Konfirmasi Password
                     Padding(
@@ -224,7 +252,7 @@ class _SignUpState extends State<SignUp> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 60),
                       child: ElevatedButton(
-                        onPressed: _saveSignUp,
+                        onPressed: _saveSignUpKader,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
                           foregroundColor: const Color.fromARGB(255, 0, 0, 0),

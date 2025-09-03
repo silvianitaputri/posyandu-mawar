@@ -1,9 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:posyandu_mawar/ui/Ketua_login.dart';
-import 'package:posyandu_mawar/ui/biodata_anak.dart';
+import 'package:posyandu_mawar/ui/ketua_login.dart';
 import 'package:posyandu_mawar/ui/kader_login.dart';
 import 'package:posyandu_mawar/ui/login.dart';
+import 'package:posyandu_mawar/ui/shared_preference.dart';
+import 'package:posyandu_mawar/ui/sign_up.dart';
+import 'package:posyandu_mawar/ui/signup_kader.dart';
+import 'package:posyandu_mawar/ui/signup_ketua.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RolePage extends StatefulWidget {
   const RolePage({super.key});
@@ -23,12 +27,23 @@ class _RolePageState extends State<RolePage> {
       minHeight: MediaQuery.of(context).size.height, // minimal setinggi layar
     ),
     child: Center(
+      
       child: Padding(
         padding: const EdgeInsets.all(2),
         child: Form(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+                 ElevatedButton(
+  onPressed: () {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const SharedPreferencesViewer(),
+      ),
+    );
+  },
+  child: const Text("Lihat SharedPreferences"),
+),
               Image.asset(
                 'aset/p14.png',
                 width: MediaQuery.of(context).size.width * 0.6,
@@ -45,13 +60,23 @@ class _RolePageState extends State<RolePage> {
               ),
               const SizedBox(height: 30),
      InkWell(
-  onTap: () {
-    print("Orang Tua dipilih");
-    // Misalnya langsung navigate ke halaman biodata
+ onTap: () async {
+  final prefs = await SharedPreferences.getInstance();
+  final bool isSignedUp = prefs.getBool("isSignedUp") ?? false;
+
+
+  if (isSignedUp) {
+
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => const BiodataAnak()),
+      MaterialPageRoute(builder: (context) => const LoginPage()),
     );
-  },
+  } else {
+   
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => const SignUp()),
+    );
+  }
+},
   borderRadius: BorderRadius.circular(12),
   child: Container(
     width: 300,
@@ -87,17 +112,29 @@ class _RolePageState extends State<RolePage> {
         ),
       ],
     ),
+    
   ),
+  
 ),
 
               const SizedBox(height: 16),
  InkWell(
-  onTap: () {
-    print("Orang Tua dipilih");
-    // Misalnya langsung navigate ke halaman biodata
+  onTap: () async{
+     final prefs = await SharedPreferences.getInstance();
+  final bool isSignedUp = prefs.getBool("isSignedUpkader") ?? false;
+  
+
+  if (isSignedUp) {
+
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (context) => const LoginKaderPage()),
     );
+  } else {
+   
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => const SignUpKader()),
+    );
+  }
   },
   borderRadius: BorderRadius.circular(12),
   child: Container(
@@ -139,12 +176,22 @@ class _RolePageState extends State<RolePage> {
  const SizedBox(height: 16),
 InkWell(
   
-  onTap: () {
+  onTap: () async{
+     final prefs = await SharedPreferences.getInstance();
+  final bool isSignedUp = prefs.getBool("isSignedUpketua") ?? false;
+  
 
+  if (isSignedUp) {
 
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (context) => const LoginKetuaPage()),
     );
+  } else {
+   
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => const SignupKetua()),
+    );
+  }
   },
   borderRadius: BorderRadius.circular(12),
   child: Container(

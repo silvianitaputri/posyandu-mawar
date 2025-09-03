@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:posyandu_mawar/ui/pemeriksaan.dart';
 
 class InputData extends StatefulWidget {
   const InputData({super.key});
@@ -16,7 +17,14 @@ class _InputDataState extends State<InputData> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Input Data Balita"),
+        title: const Text("Input Data Balita"), leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+              Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => const PemeriksaanPage()),
+    );
+          },
+        ),
         backgroundColor: Colors.blue,
         centerTitle: true,
       ),

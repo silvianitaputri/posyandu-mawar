@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
-import 'package:posyandu_mawar/ui/antrian.dart';
 import 'package:posyandu_mawar/ui/pemeriksaan.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class KaderPage extends StatefulWidget {
@@ -13,6 +12,31 @@ class KaderPage extends StatefulWidget {
 }
 
 class _KaderPageState extends State<KaderPage> {
+  String namakader = "";
+  String alamatemail = "";
+  String nomorsk = "";
+  String jabatan = "";
+
+
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData(); // 🔹
+  }
+
+  Future<void> _loadData() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+  
+      namakader = prefs.getString("Namakader") ?? "Belum diisi";
+      alamatemail = prefs.getString("emailkader") ?? "-";
+      nomorsk = prefs.getString("skkader") ?? "-";
+      jabatan = prefs.getString("Jabatankader") ?? "-";
+
+      
+   } );}
   int currentPageIndex = 0;
   showMenu(BuildContext context) {
     showModalBottomSheet(
@@ -691,7 +715,7 @@ Icon(
 ),
 Center(
   child: Text(
-    'Partuni',
+    '$namakader',
     style: TextStyle (fontSize: 14,  fontWeight: FontWeight.bold,),
     
     
@@ -705,7 +729,7 @@ Container(
     border: Border.all(color: Colors.blueGrey, width: 2),
     borderRadius: BorderRadius.circular(12),
   ),
-  child: const Column(
+  child: Column(
     
     crossAxisAlignment: CrossAxisAlignment.start,
     
@@ -713,25 +737,25 @@ Container(
    
       Row(
         children: [
-          Text('No SK Kader       : ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-          SizedBox(width: 8),
-          Text('Pos/2003/PRT', style: TextStyle(fontSize: 16)),
+          const Text('No SK Kader       : ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+          const SizedBox(width: 8),
+          Text('$nomorsk', style: const TextStyle(fontSize: 16)),
         ],
       ),
-      SizedBox(height: 8),
+      const SizedBox(height: 8),
       Row(
         children: [
-          Text('jabatan                : ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-          SizedBox(width: 8),
-          Text('Bendahara', style: TextStyle(fontSize: 16)),
+          const Text('jabatan                : ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+          const SizedBox(width: 8),
+          Text('$jabatan', style: const TextStyle(fontSize: 16)),
         ],
       ),
-      SizedBox(height: 8),
+      const SizedBox(height: 8),
       Row(
         children: [
-          Text('Nomor HP           : ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-          SizedBox(width: 8),
-          Text('0895345175237', style: TextStyle(fontSize: 16)),
+          const Text('Email           : ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+          const SizedBox(width: 8),
+          Text('$alamatemail', style: const TextStyle(fontSize: 16)),
         ],
       ),
     ],

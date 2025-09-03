@@ -83,18 +83,18 @@ class _AntrianState extends State<Antrian> {
 
 
             // Judul dan rating
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Row(
                 children: [
                   Expanded(
                     child: Text(
                       'Posyandu Mawar 15 Katapang',
-                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ),
                   Row(
-                    children: const [
+                    children: [
                       Icon(Icons.star, color: Colors.orange, size: 20),
                       SizedBox(width: 4),
                       Text('4.8', style: TextStyle(fontWeight: FontWeight.bold)),
@@ -105,10 +105,10 @@ class _AntrianState extends State<Antrian> {
             ),
 
             // Alamat dengan icon lokasi
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
               child: Row(
-                children: const [
+                children: [
                   Icon(Icons.location_on_outlined, color: Colors.grey),
                   SizedBox(width: 6),
                   Expanded(
@@ -186,10 +186,10 @@ class _AntrianState extends State<Antrian> {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 children: [
-                  Expanded(
+                  const Expanded(
                     child: Text(
                       '0 pengunjung \nsudah siap menunggu giliran',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
                ElevatedButton(
@@ -206,7 +206,7 @@ class _AntrianState extends State<Antrian> {
   titlePadding: EdgeInsets.zero, // Hilangkan padding default
   title: Container(
     padding: const EdgeInsets.all(16),
-    color: Colors.blue, // Warna background di belakang title
+    color: Colors.pinkAccent, // Warna background di belakang title
     child: const Text(
       'Konfirmasi',
       style: TextStyle(
@@ -215,10 +215,10 @@ class _AntrianState extends State<Antrian> {
       ),
     ),
   ),
-  content: Column(
+  content: const Column(
     mainAxisSize: MainAxisSize.min,
     crossAxisAlignment: CrossAxisAlignment.start,
-    children: const [
+    children: [
       Text('Jadwal Praktek:', style: TextStyle(fontWeight: FontWeight.bold)),
       SizedBox(height: 4),
       Text('Selasa, 04 Juli 2025'),
